@@ -3,7 +3,7 @@
 
     <!--question text-->
     <string name="question_one_true">Implementing algorithms on a computer often increases productivity.</string>
-    <stirng name="question_two_true">Wireless data communications are 5th generation innovation in computing.</stirng>
+    <string name="question_two_true">Wireless data communications are 5th generation innovation in computing.</string>
     <string name="question_three_false">Computer Science is the study of computers.</string>
     <string name="question_four_false">All conceivable problems can be solved algorithmically.</string>
     <string name="question_five_true">The Leibniz wheel can carry out addition, subtraction, multiplication and division.</string>
@@ -15,6 +15,10 @@
     <string name="prev_button">Prev</string>
     <string name="next_button">Next</string>
     <string name="cheat_button">Cheat!</string>
+
+    <!--toast text-->
+    <string name="correct_toast">You are Correct!</string>
+    <string name="incorrect_toast">You are Wrong! Try again.</string>
 </resources>
 
 
