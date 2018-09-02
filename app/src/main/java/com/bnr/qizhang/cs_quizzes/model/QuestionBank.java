@@ -4,17 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionBank {
+    private static QuestionBank sQuestionBank;
     private static List<Question> mQuestions;
 
-    public QuestionBank() {
+    private QuestionBank() {
         mQuestions = new ArrayList<>();
     }
 
-    public List<Question> getQuestions() {
+    public static List<Question> getQuestions() {
         return mQuestions;
     }
 
-    public void addQuesiton(Question question) {
+    public static void addQuesiton(Question question) {
         mQuestions.add(question);
+    }
+
+    public static QuestionBank get() {
+        if (sQuestionBank == null) {
+            sQuestionBank = new QuestionBank();
+        }
+
+        return sQuestionBank;
     }
 }

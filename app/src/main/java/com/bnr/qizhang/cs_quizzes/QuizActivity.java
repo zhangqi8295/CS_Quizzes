@@ -1,7 +1,10 @@
 package com.bnr.qizhang.cs_quizzes;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,8 +13,11 @@ import android.widget.Toast;
 import com.bnr.qizhang.cs_quizzes.model.Question;
 import com.bnr.qizhang.cs_quizzes.model.QuestionBank;
 
+import java.util.Objects;
+
 public class QuizActivity extends AppCompatActivity {
     private static final String TAG = QuizActivity.class.getSimpleName();
+    private static final int REQUEST_CHEAT_ID = 1;
 
     private TextView mQuestionText;
     private Button mTrueButton;
@@ -20,7 +26,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button mNextButton;
     private Button mPrevButton;
 
-    QuestionBank questionBank = new QuestionBank();
+    QuestionBank questionBank = QuestionBank.get();
 
     private int mCurrentIndex = 0;
 
@@ -63,6 +69,15 @@ public class QuizActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = CheatActivity.newIntent(QuizActivity.this, questionBank.getQuestions().get(mCurrentIndex).getId());
+               // startActivity(intent);
+                startActivityForResult(intent, REQUEST_CHEAT_ID);
+            }
+        });
     }
 
     private void updateQuestion() {
@@ -72,6 +87,11 @@ public class QuizActivity extends AppCompatActivity {
 
     private void checkAnswer(boolean userPressed) {
         int toastId = (userPressed == questionBank.getQuestions().get(mCurrentIndex).isTrue()) ? R.string.correct_toast : R.string.incorrect_toast;
+
+        if (questionBank.getQuestions().get(mCurrentIndex).isCheater()) {
+            toastId = R.string.judgement_text;
+        }
+
         Toast.makeText(this, toastId, Toast.LENGTH_SHORT).show();
     }
 
@@ -98,4 +118,27 @@ public class QuizActivity extends AppCompatActivity {
         questionBank.addQuesiton(question);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult get called");
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        Log.d(TAG, "is data null? " + (data == null));
+        switch (requestCode) {
+            case REQUEST_CHEAT_ID: {
+                if (data == null) {
+                    return;
+                }
+
+                if (CheatActivity.isCheater(data)) {
+                    questionBank.getQuestions().get(mCurrentIndex).setCheater(true);
+                }
+
+            } break;
+
+            default: break;
+        }
+    }
 }
